@@ -68,6 +68,7 @@ mod version;
 
 pub mod easy;
 pub mod multi;
+pub mod url;
 mod panic;
 
 #[cfg(test)]

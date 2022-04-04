@@ -35,6 +35,7 @@ pub type CURLversion = __enum_ty;
 pub type curl_off_t = i64;
 
 pub enum CURL {}
+pub enum CURL_URL {}
 
 #[cfg(unix)]
 pub type curl_socket_t = libc::c_int;
@@ -693,6 +694,19 @@ pub const CURL_FORMADD_INCOMPLETE: CURLFORMcode = 5;
 pub const CURL_FORMADD_ILLEGAL_ARRAY: CURLFORMcode = 6;
 pub const CURL_FORMADD_DISABLED: CURLFORMcode = 7;
 
+pub type CURLUPARTcode = __enum_ty;
+pub const CURLUPART_URL: CURLUPARTcode = 0;
+pub const CURLUPART_SCHEME: CURLUPARTcode = 1;
+pub const CURLUPART_USER: CURLUPARTcode = 2;
+pub const CURLUPART_PASSWORD: CURLUPARTcode = 3;
+pub const CURLUPART_OPTIONS: CURLUPARTcode = 4;
+pub const CURLUPART_HOST: CURLUPARTcode = 5;
+pub const CURLUPART_PORT: CURLUPARTcode = 6;
+pub const CURLUPART_PATH: CURLUPARTcode = 7;
+pub const CURLUPART_QUERY: CURLUPARTcode = 8;
+pub const CURLUPART_FRAGMENT: CURLUPARTcode = 9;
+pub const CURLUPART_ZONEID: CURLUPARTcode = 9; // added in 7.65.0
+
 #[repr(C)]
 pub struct curl_forms {
     pub option: CURLformoption,
@@ -1127,6 +1141,11 @@ extern "C" {
         sockfd: curl_socket_t,
         sockp: *mut c_void,
     ) -> CURLMcode;
+
+    pub fn curl_url() -> *mut CURL_URL;
+    pub fn curl_url_set(handle: *mut CURL_URL, part: CURLUPARTcode, s: *const c_char, flags: c_uint) -> CURLMcode;
+    pub fn curl_url_get(handle: *mut CURL_URL, part: CURLUPARTcode, s: *mut *const c_char, flags: c_uint) -> CURLMcode;
+    pub fn curl_url_cleanup(handle: *mut CURL_URL);
 }
 
 pub fn rust_crate_version() -> &'static str {
